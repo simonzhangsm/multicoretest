@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 
     get_cpu_mask(0, &cpu_mask);
     print_cpu_mask(cpu_mask);
+    cout<<sysconf(_SC_NPROCESSORS_CONF)<<endl;
 
     CPU_ZERO(&cpu_mask);
     CPU_SET(active_cpu, &cpu_mask);
