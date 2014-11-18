@@ -1,3 +1,5 @@
+export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+gcc -Wl,--add-stdcall-alias -I"%JAVA_HOME%\include" -I"%JAVA_HOME%\include\win32" -shared -o hello.dll HelloJNI.c
 OBJS = sched_setaffinity.o
 CC = g++
 DEBUG = -g
