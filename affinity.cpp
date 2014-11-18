@@ -1,7 +1,7 @@
 /**
- * FileName: affinity_demo.c
+ * FileName: affinity.cpp
  */
- 
+
 #define _GNU_SOURCE
 
 #include <stdint.h>
@@ -9,7 +9,6 @@
 #include <sched.h>
 #include <pthread.h>
 #include <stdlib.h>
-
 
 static inline void print_cpu_mask(cpu_set_t cpu_mask)
 {
@@ -51,25 +50,37 @@ static inline void set_cpu_mask(pid_t pid, cpu_set_t *mask)
     }
 }
 
+void *thread_func(void *param)
+{
+    cpu_set_t cpu_mask;
+    get_cpu_mask(0, &cpu_mask);
+    printf("Slave thread ");
+    print_cpu_mask(cpu_mask);
+    while (1);
+}
+
 int main(int argc, char *argv[])
 {
     unsigned int active_cpu = 0;
     cpu_set_t cpu_mask;
+    pthread_t thread;
 
     get_cpu_mask(0, &cpu_mask);
     print_cpu_mask(cpu_mask);
-    cout<<sysconf(_SC_NPROCESSORS_CONF)<<endl;
 
     CPU_ZERO(&cpu_mask);
     CPU_SET(active_cpu, &cpu_mask);
     set_cpu_mask(0, &cpu_mask);
 
     get_cpu_mask(0, &cpu_mask);
+    printf("Master thread ");
     print_cpu_mask(cpu_mask);
 
-    for(;;)
+    if (pthread_create(&thread, NULL, thread_func, NULL) != 0)
     {
-        ;
+        perror("pthread_create failed.\n");
     }
+    pthread_join(thread, NULL);
+
     return 0;
 }
