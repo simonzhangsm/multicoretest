@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <sched.h>
+#include "sched_setaffinity.h"
 
 double waste_time(long n)
 {
@@ -25,7 +26,7 @@ double waste_time(long n)
     return res;
 }
 
-int main(int argc, const char * argv[]) {
+void sched_setaffinitytest() {
     unsigned long mask = 1; /* 二进制1,processor 0, bind process to processor 0 */
     if (sched_setaffinity(0, sizeof(mask), &mask) <0) {
         perror("sched_setaffinity");
@@ -52,8 +53,5 @@ int main(int argc, const char * argv[]) {
     }
     /* waste some more time to see the processor switch */
     printf ("result: %f\n", waste_time (2000));
-    // insert code here...
-    std::cout << "Hello, World!\n";
-    return 0;
 }
 
